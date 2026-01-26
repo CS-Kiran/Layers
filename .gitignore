@@ -1,0 +1,61 @@
+#documents
+docs/
+*.docx
+*.pdf
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+backend/target/
+ml-service/__pycache__/
+ml-service/.pytest_cache/
+ml-service/venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+
+# Uploads
+uploads/
+backend/uploads/
+
+# ML Models (don't commit large models)
+ml-service/trained_models/*.h5
+ml-service/trained_models/*.pkl
+!ml-service/trained_models/.gitkeep
+
+# Build artifacts
+*.class
+*.jar
+!backend/.mvn/wrapper/maven-wrapper.jar
+
+# Testing
+coverage/
+.pytest_cache/
+
+# Docker
+*.pid
+*.seed
+*.pid.lock

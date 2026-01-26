@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: layers-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-layers}
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin123}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/init-scripts/init-postgres.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - layers-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-admin}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:4.4
+    container_name: layers-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-admin123}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-layers_ml}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./infrastructure/init-scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    networks:
+      - layers-network
+    healthcheck:
+      test: >
+        mongosh --host localhost
+            --port 27017
+            -u ${MONGO_ROOT_USER:-admin}
+            -p ${MONGO_ROOT_PASSWORD:-admin123}
+            --authenticationDatabase admin
+            --eval "db.adminCommand('ping')"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  layers-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  backend_uploads:
+  ml_models:
