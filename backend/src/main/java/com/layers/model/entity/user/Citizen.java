@@ -20,6 +20,8 @@ public class Citizen extends User {
 
     private String address;
     
+    private String city;
+    
     private String phoneNumber;
     
     @Builder.Default
