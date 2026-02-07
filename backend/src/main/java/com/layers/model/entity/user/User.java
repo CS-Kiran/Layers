@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @SuperBuilder
-public class User {
+public abstract class User {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -40,15 +40,19 @@ public class User {
     @Column(nullable = false)
     private AccountStatus accountStatus;
 
-    @Builder.Default
-    @Column(nullable = false)
-    private boolean isActive = true;
-    
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    
+    public AccountStatus getAccountStatus() {
+        return this.accountStatus;
+    }
+
+    public void setAccountStatus(AccountStatus accountStatus) {
+        this.accountStatus = accountStatus;
+    }
 	
 }

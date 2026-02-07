@@ -5,12 +5,15 @@ import org.springframework.stereotype.Repository;
 
 import com.layers.model.entity.user.AccountStatus;
 import com.layers.model.entity.user.Citizen;
+
 import java.util.List;
 
 @Repository
 public interface CitizenRepository extends JpaRepository<Citizen, Long> {
 
     List<Citizen> findByCity(String city);
+ 
+    List<Citizen> findByPinCode(Long pinCode);
     
     List<Citizen> findByAccountStatus(AccountStatus status);
 }

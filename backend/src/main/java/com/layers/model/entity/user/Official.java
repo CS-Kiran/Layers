@@ -11,30 +11,42 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "citizens")
+@Table(name = "officials")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Citizen extends User {
-  
+public class Official extends User {
+	
 	@Column(nullable = false)
-    private String city;
+    private String department;
     
 	@Column(nullable = false)
-    private String state;
+    private String designation;
+
+	@Column(nullable = false)
+    private String idProofImageUrl; 
+    
+	@Column(nullable = false, unique=true)
+    private String employeeId;
     
 	@Column(nullable = false)
-    private String pinCode;
+    private String officeCity;
     
-	@Column(nullable = true, unique=true)
-    private String phoneNumber;
+	@Column(nullable = false)
+    private String officeState;
+    
+	@Column(nullable = false)
+    private String OfficePINCode;
+    
+	@Column(nullable = false)
+    private String officePhoneNumber;
     
 	@PrePersist
     public void prePersist() {
         if (this.getAccountStatus() == null) {
-            this.setAccountStatus(AccountStatus.ACTIVE);
+            this.setAccountStatus(AccountStatus.PENDING_VERIFICATION);
         }
     }
 }

@@ -4,17 +4,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.layers.model.entity.user.AccountStatus;
-import com.layers.model.entity.user.Officials;
+import com.layers.model.entity.user.Official;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OfficialsRepository extends JpaRepository<Officials, Long> {
+public interface OfficialsRepository extends JpaRepository<Official, Long> {
 
-    Optional<Officials> findByEmployeeId(String employeeId);
+    Optional<Official> findByEmployeeId(String employeeId);
 
-    List<Officials> findByDepartment(String department);
-
-    List<Officials> findByAccountStatus(AccountStatus status);
+    List<Official> findByDepartment(String department);
+    
+    List<Official> findByOfficeCity(String officeCity);
+    
+    List <Official> findByOfficeState(String officeState);
+    
+    List<Official> findByAccountStatus(AccountStatus status);
 }
