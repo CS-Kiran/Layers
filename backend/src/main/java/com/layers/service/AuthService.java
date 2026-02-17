@@ -38,7 +38,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager = null;
 
     @Transactional
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) throws BadRequestException {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("Email already in use");
         }
@@ -55,7 +55,7 @@ public class AuthService {
         String accessToken = jwtTokenProvider.generateToken(savedUser);
         String refreshToken = jwtTokenProvider.generateRefreshToken(savedUser.getEmail());
 
-        return new AuthResponse(accessToken, refreshToken, mapToUserDTO(savedUser));
+        return new AuthResponse(accessToken, refreshToken, refreshToken, 0, mapToUserDTO(savedUser));
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -75,7 +75,7 @@ public class AuthService {
         String accessToken = jwtTokenProvider.generateToken(user);
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
 
-        return new AuthResponse(accessToken, refreshToken, mapToUserDTO(user));
+        return new AuthResponse(accessToken, refreshToken, refreshToken, 0, mapToUserDTO(user));
     }
 
     public UserDTO getCurrentUser() {
@@ -100,7 +100,7 @@ public class AuthService {
 
         String newAccessToken = jwtTokenProvider.generateToken(user);
 
-        return new AuthResponse(newAccessToken, request.getRefreshToken(), mapToUserDTO(user));
+        return new AuthResponse(newAccessToken, request.getRefreshToken(), newAccessToken, 0, mapToUserDTO(user));
     }
 
     private UserDTO mapToUserDTO(User user) {
@@ -108,13 +108,13 @@ public class AuthService {
                 user.getId(),
                 user.getFullName(),
                 user.getEmail(),
-                user.getRole(),
+                null, user.getRole(),
                 user.getAccountStatus()
         );
     }
 
     // Helper: Factory method for User Entities
-    private User createUserEntity(RegisterRequest request) {
+    private User createUserEntity(RegisterRequest request) throws BadRequestException {
         return switch (request.getRole()) {
             case CITIZEN -> {
                 Citizen citizen = new Citizen();
@@ -131,7 +131,7 @@ public class AuthService {
                 official.setEmployeeId(request.getEmployeeId());
                 official.setOfficeCity(request.getOfficeCity());
                 official.setOfficeState(request.getOfficeState());
-                official.setOfficePinCode(request.getOfficePinCode());
+                official.setOfficePINCode(request.getOfficePinCode());
                 official.setOfficePhoneNumber(request.getOfficePhoneNumber());
                 yield official;
             }
